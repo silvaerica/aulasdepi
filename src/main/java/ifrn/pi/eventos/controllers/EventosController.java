@@ -17,7 +17,7 @@ import ifrn.pi.eventos.repositories.EventoRepository;
 	
    @RequestMapping("/eventos/form")
    public String form() {
- 	return "formEvento";
+ 	return "eventos/formEvento";
 	
 	
 	}
@@ -28,7 +28,7 @@ public String adicionar(Evento evento) {
 	System.out.println(evento);
 	er.save(evento);
 	
-	return "evento-adicionado";
+	return "eventos/evento-adicionado";
 }
 
 }
