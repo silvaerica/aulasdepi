@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +21,12 @@ import ifrn.pi.eventos.repositories.EventoRepository;
 @RequestMapping("/eventos")
 public class EventosController {
 
+	
 	@Autowired
 	private EventoRepository er;
 	@Autowired
 	private ConvidadoRepository cr;
+	private Convidado convidado;
 	
 	@GetMapping("/form")
 	public String form() {
@@ -89,4 +91,43 @@ public class EventosController {
 		
         return "redirect:/eventos/{idEvento}";
 }
+	@GetMapping("/{id}/remover")
+	public String apagarEvento(@PathVariable Long id) {
+		
+		Optional<Evento> opt = er.findById(id);
+		
+		if (!opt.isEmpty()) {
+			Evento evento = opt.get();
+			
+			List<Convidado> convidados = cr.findByEvento(evento);
+			
+			cr.deleteAll(convidados);
+			er.delete(evento);
+			
+		}
+		
+		return "redirect:/eventos";
+		
+	}
+	@DeleteMapping("/{idConvidado}/deletar")
+	public String deletarConvidado(@PathVariable Long idConvidado ) {
+		
+		Optional<Convidado> opt = cr.findById(idConvidado);
+		if (!opt.isEmpty()) {
+			Convidado convidado = opt.get();
+			
+			cr.delete(convidado);
+		}
+	
+	
+	
+	return "redirect:/eventos/{idConvidado}";
+	
+	}
+	
+					
+		
 }
+
+
+
