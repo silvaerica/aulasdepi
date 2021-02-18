@@ -154,21 +154,17 @@ public class EventosController {
 		return "redirect:/eventos";
 		
 	}
-	@DeleteMapping("/{idConvidado}/deletar")
-	public ModelAndView apagarConvidado(@PathVariable Long id) {
-		ModelAndView md = new ModelAndView();
-		
+	@RequestMapping("/{id}/removerConvidado")
+	public String apagarConvidado(@PathVariable Long id) {
 		Optional<Convidado> opt = cr.findById(id);
-		if (!opt.isEmpty()) {
-			md.setViewName("redirect:/eventos");
-			return md;
+		
+		if (!opt.isEmpty()) {	
+        Convidado convidado = opt.get();
+        cr.delete(opt.get());
 			
 		}
-		Convidado convidado = opt.get();
-		md.setViewName("eventos/detalhes");
-		md.addObject("convidado", convidado);
-		cr.delete(convidado);
-		return md;
+		
+		return "redirect:/eventos/{id}";
 
 	
 	
