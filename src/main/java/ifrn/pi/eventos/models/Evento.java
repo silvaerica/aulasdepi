@@ -1,9 +1,21 @@
 package ifrn.pi.eventos.models;
 
+
+
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+
 
 @Entity
 public class Evento {
@@ -11,12 +23,18 @@ public class Evento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nome;
-	private String local;
-	private String data;
-	private String horario;
 	
-	public Long getId() {
+	@NotBlank
+	private String nome;
+	@NotBlank
+	private String local;
+	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate data;
+	@NotNull
+	private LocalTime horario;
+	
+	public Long getId() { 
 		return id;
 	}
 
@@ -40,19 +58,19 @@ public class Evento {
 		this.local = local;
 	}
 	
-	public String getData() {
+	public LocalDate getData() {
 		return data;
 	}
 	
-	public void setData(String data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	
-	public String getHorario() {
+	public LocalTime getHorario() {
 		return horario;
 	}
 	
-	public void setHorario(String horario) {
+	public void setHorario(LocalTime horario) {
 		this.horario = horario;
 	}
 
