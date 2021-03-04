@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
 
+
+
+
 @Entity
 public class Convidado {
 
