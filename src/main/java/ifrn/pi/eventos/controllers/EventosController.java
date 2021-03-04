@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,9 +84,9 @@ public class EventosController {
 	}
 	
 	@PostMapping("/{idEvento}")
-	public String savarConvidado(@PathVariable Long idEvento, @Valid Convidado convidado, BindingResult result, RedirectAttributes attributes) {
+	public ModelAndView savarConvidado(@PathVariable Long idEvento, @Valid Convidado convidado, BindingResult result, RedirectAttributes attributes) {
 		if(result.hasErrors()) {
-			return "redirect:/eventos";	
+			return detalhar(idEvento, convidado);
 			
 		}
 		
@@ -95,8 +94,11 @@ public class EventosController {
 		System.out.println(convidado);
 		
 		Optional<Evento> opt = er.findById(idEvento);
+		ModelAndView md = new ModelAndView();
 		if(opt.isEmpty()) {
-		return "redirect:/eventos";
+			md.setViewName("redirect:/eventos");
+			return md;
+		
 		}
 		
 		Evento evento = opt.get();
@@ -105,7 +107,9 @@ public class EventosController {
 		cr.save(convidado);
 		attributes.addFlashAttribute("mensagem", "convidado salvo!");
 		
-        return "redirect:/eventos/{idEvento}";
+		md.setViewName("redirect:/eventos/{idEvento}");
+		return md;
+	
 }
 	@GetMapping("/{id}/selecionar")
 	public ModelAndView selecionarEvento(@PathVariable Long id) {
@@ -171,18 +175,18 @@ public class EventosController {
 		return "redirect:/eventos";
 		
 	}
-	@RequestMapping("/{id}/removerConvidado")
+	@GetMapping("/{idEvento}/convidado/{id}/remover")
 	public String apagarConvidado(@PathVariable Long id,  RedirectAttributes attributes) {
 		Optional<Convidado> opt = cr.findById(id);
-		
 		if (!opt.isEmpty()) {	
-        Convidado convidado = opt.get();
-        cr.delete(opt.get());
+        cr.deleteById(id);
+        
+        
         attributes.addFlashAttribute("mensagem", "Convidado removido com sucesso!");
-  
+       
 		}
-		
-		return "redirect:/eventos/{id}";
+		 
+		return "redirect:/eventos/{idEvento}";
 
 	
 	
